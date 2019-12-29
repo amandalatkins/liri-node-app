@@ -70,10 +70,11 @@ if (liriSearch === "concert-this") {
 // SONG SEARCH =========================================================== //
 
 else if (liriSearch === "spotify-this-song") {
+    if (userSearch) {
+        searchTerms = getTerms(process.argv);
+    }
 
-    let song = getTerms(process.argv);
-
-    spotify.search({ type: 'track', query: song }, (err, data) => {
+    spotify.search({ type: 'track', query: searchTerms }, (err, data) => {
         if (err) {
             return console.log(err);
         }
@@ -89,6 +90,36 @@ else if (liriSearch === "spotify-this-song") {
         } else {
             console.log('Listen: '+songInfo.external_urls.spotify);
         }
+        console.log('==================================================');
+        console.log('\n');
+
+    });
+
+}
+
+// MOVIE SEARCH =========================================================== //
+
+else if (liriSearch === "movie-this") {
+    if (userSearch) {
+        searchTerms = getTerms(process.argv);
+    }
+    let query = "http://www.omdbapi.com/?apikey=trilogy&t="+searchTerms;
+    axios.get(query).then((response) => {
+        let movie = response.data;
+        console.log('\n');
+        console.log("LIRI found the following information:");
+        console.log('\n==================================================');
+        console.log(movie.Title.toUpperCase());
+        console.log('\n');
+        console.log('Release year: '+movie.Year);
+        console.log('IMDB Rating: '+movie.imdbRating);
+        console.log('Rotten Tomatoes Rating: '+movie.Metascore);
+        console.log('Countries: '+movie.Country);
+        console.log('Language(s): '+movie.Language);
+        console.log('\n');
+        console.log("Plot:\n"+movie.Plot);
+        console.log('\n');
+        console.log("Starring: \n"+movie.Actors);
         console.log('==================================================');
         console.log('\n');
 
