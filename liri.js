@@ -127,6 +127,20 @@ else if (liriSearch === "movie-this") {
 
 }
 
+// DO WHAT IT SAYS =========================================================== //
+
+else if (liriSearch === "do-what-it-says") {
+    fs.readFile('random.txt','utf8', function(err, data) {
+        let commands = data.split('\n');
+        let randIndex = Math.floor(Math.random() * commands.length);
+        let theCommand = commands[randIndex].split(',');
+        var subSearch = theCommand[0];
+        searchTerms = theCommand[1];
+        console.log(subSearch);
+    });
+}
+
+// Get search terms from process.argv and concatenate them together into a string
 function getTerms(arr) {
     arr.splice(0,3);
     return arr.join(' ');
