@@ -36,3 +36,38 @@ if (!process.argv[3]) {
     }
     userSearch = false;
 }
+
+// CONCERT SEARCH =========================================================== //
+
+if (liriSearch === "concert-this") {
+
+    if (userSearch) {
+        searchTerms = getTerms(process.argv);
+    }
+    let query = "https://rest.bandsintown.com/artists/" + searchTerms + "/events?app_id=codingbootcamp";
+
+    axios.get(query).then((response) => { 
+        let concerts = response.data;
+        console.log("LIRI found "+concerts.length+" events for "+searchTerms);
+        
+        // console.log(concerts);s
+
+        for(concert of concerts) {
+            console.log('\n==================================================');
+
+            if (concert.venue.region) {
+                console.log("\n"+concert.venue.city.toUpperCase()+", "+concert.venue.region.toUpperCase());
+            } else {
+                console.log("\n"+concert.venue.city.toUpperCase()+", "+concert.venue.country.toUpperCase());
+            }
+            console.log(concert.venue.name);
+            console.log(moment(concert.datetime).format('MM/DD/YYYY'));
+        }
+    });
+
+}
+
+function getTerms(arr) {
+    arr.splice(0,3);
+    return arr.join(' ');
+}
