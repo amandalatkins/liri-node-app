@@ -67,6 +67,35 @@ if (liriSearch === "concert-this") {
 
 }
 
+// SONG SEARCH =========================================================== //
+
+else if (liriSearch === "spotify-this-song") {
+
+    let song = getTerms(process.argv);
+
+    spotify.search({ type: 'track', query: song }, (err, data) => {
+        if (err) {
+            return console.log(err);
+        }
+        let songInfo = data.tracks.items[0];
+        console.log('\n');
+        console.log("LIRI found the following information:");
+        console.log('\n==================================================');
+        console.log('Song: ' + songInfo.name);
+        console.log('Artist: ' + songInfo.artists[0].name);
+        console.log('Album: ' + songInfo.album.name);
+        if (songInfo.preview_url) {
+            console.log('Preview: ' + songInfo.preview_url);
+        } else {
+            console.log('Listen: '+songInfo.external_urls.spotify);
+        }
+        console.log('==================================================');
+        console.log('\n');
+
+    });
+
+}
+
 function getTerms(arr) {
     arr.splice(0,3);
     return arr.join(' ');
