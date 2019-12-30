@@ -18,7 +18,7 @@ movie-this
 
 do-what-it-says */
 
-console.log(process.argv);
+// console.log(process.argv);
 
 var liriSearch = process.argv[2];
 
@@ -72,19 +72,23 @@ function doSearch() {
 
         axios.get(query).then((response) => { 
             let concerts = response.data;
-            console.log("LIRI found "+concerts.length+" events for "+searchTerms);
+            let output = "\n\nLIRI found "+concerts.length+" events for "+searchTerms;
     
             for(concert of concerts) {
-                console.log('\n==================================================');
+                output += '\n\n==================================================\n';
     
                 if (concert.venue.region) {
-                    console.log("\n"+concert.venue.city.toUpperCase()+", "+concert.venue.region.toUpperCase());
+                    output += "\n"+concert.venue.city.toUpperCase()+", "+concert.venue.region.toUpperCase();
                 } else {
-                    console.log("\n"+concert.venue.city.toUpperCase()+", "+concert.venue.country.toUpperCase());
+                    output += "\n"+concert.venue.city.toUpperCase()+", "+concert.venue.country.toUpperCase();
                 }
-                console.log(concert.venue.name);
-                console.log(moment(concert.datetime).format('MM/DD/YYYY'));
+                output += "\n"+concert.venue.name;
+                output += "\n"+moment(concert.datetime).format('MM/DD/YYYY');
             }
+
+            output += '\n\n==================================================';
+
+            logSearch(output);
         });    
     }
 
@@ -95,19 +99,19 @@ function doSearch() {
                 return console.log(err);
             }
             let songInfo = data.tracks.items[0];
-            console.log('\n');
-            console.log("LIRI found the following information:");
-            console.log('\n==================================================');
-            console.log('Song: ' + songInfo.name);
-            console.log('Artist: ' + songInfo.artists[0].name);
-            console.log('Album: ' + songInfo.album.name);
+            let output = '\n\nLIRI found the following information:';
+            output += '\n\n==================================================';
+            output += '\nSong: ' + songInfo.name;
+            output += '\nArtist: ' + songInfo.artists[0].name;
+            output += '\nAlbum: ' + songInfo.album.name;
             if (songInfo.preview_url) {
-                console.log('Preview: ' + songInfo.preview_url);
+                output += '\nPreview: ' + songInfo.preview_url;
             } else {
-                console.log('Listen: '+songInfo.external_urls.spotify);
+                output += '\nListen: '+songInfo.external_urls.spotify;
             }
-            console.log('==================================================');
-            console.log('\n');
+            output += '\n==================================================\n';
+
+            logSearch(output);
     
         });
     }
@@ -119,23 +123,32 @@ function doSearch() {
 
         axios.get(query).then((response) => {
             let movie = response.data;
-            console.log('\n');
-            console.log("LIRI found the following information:");
-            console.log('\n==================================================');
-            console.log(movie.Title.toUpperCase());
-            console.log('\n');
-            console.log('Release year: '+movie.Year);
-            console.log('IMDB Rating: '+movie.imdbRating);
-            console.log('Rotten Tomatoes Rating: '+movie.Metascore);
-            console.log('Countries: '+movie.Country);
-            console.log('Language(s): '+movie.Language);
-            console.log('\n');
-            console.log("Plot:\n"+movie.Plot);
-            console.log('\n');
-            console.log("Starring: \n"+movie.Actors);
-            console.log('==================================================');
-            console.log('\n');
+            let output = '\n\nLIRI found the following information:';
+            output += '\n\n==================================================';
+            output += '\n'+movie.Title.toUpperCase();
+            output += '\nRelease year: '+movie.Year;
+            output += '\n\nIMDB Rating: '+movie.imdbRating;
+            output += '\nRotten Tomatoes Rating: '+movie.Metascore;
+            output += '\n\nCountries: '+movie.Country;
+            output += '\nLanguage(s): '+movie.Language;
+            output += '\n\nPlot:\n'+movie.Plot;
+            output += '\n\nStarring: \n'+movie.Actors;
+            output += '\n==================================================\n';
+
+            logSearch(output);
     
         });
     }
+    
+}
+
+function logSearch(output) {
+    console.log(output);
+    let fileLog = '\n'+moment().format('YYYY-MM-DD HH:mm:ss');
+    fileLog += " | node liri.js "+liriSearch+" "+searchTerms+"\n\n";
+    fileLog += "- - -";
+    fileLog += output+"\n\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - \n";
+    fs.appendFile('log.txt',fileLog,(err) => {
+        if (err) console.log(err);
+    });
 }
