@@ -25,11 +25,11 @@ if (!liriSearch || (liriSearch !== "concert-this" && liriSearch !== "spotify-thi
 if (!process.argv[3]) {
     // If the user doesn't provide any search terms, then set defaults:
     if (liriSearch === "concert-this") {
-        searchTerms = "emmylou harris";
+        searchTerms = "the lone bellow";
     } else if (liriSearch === "movie-this") {
         searchTerms = "mr nobody";
     } else if (liriSearch === "spotify-this-song") {
-        searchTerms = "valerie";
+        searchTerms = "the sign ace of base";
     }
     // User did not search, so set this variable to false
     userSearch = false;
