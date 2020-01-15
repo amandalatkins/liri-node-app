@@ -73,7 +73,7 @@ Enjoy this demonstration video to further understand how LIRI works:
 
 The following snippet shows the function that opens `random.txt` and parses a random line from it for LIRI to use
 
-```
+```javascript
     if (liriSearch === "do-what-it-says") {
         fs.readFile('random.txt','utf8', function(err, data) {
             let commands = data.split('\n');
